@@ -2,12 +2,15 @@
 // Created by pablo on 22/01/2025.
 //
 
-#include "lexer.h";
+#include "lexer.h"
 
 #include <ctype.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+Token *tokens;
+int tokenCounter;
 
 char *tokenization(const char **raw) {
     char buffer[100];
@@ -31,9 +34,14 @@ char *digitTokenization(const char **raw) {
     return strdup(buffer);
 }
 
+void assingToken(TokenType type, const char *value) {
+    tokens[tokenCounter].type = type;
+    tokens[tokenCounter].value = value;
+}
+
 Token *lexer(const char *source) {
-    Token *tokens = malloc(sizeof(Token) * 100);
-    int tokenCounter = 0;
+    tokens = calloc(100, sizeof(Token));
+    tokenCounter = 0;
     while (*source != '\0') {
         while (isspace(*source)) {
             source++;
@@ -42,26 +50,21 @@ Token *lexer(const char *source) {
         if (isalpha(*source) && !isspace(*source)) {
             char *splittedToken = tokenization(&source);
             if (strcmp(splittedToken,VALUE_DEFINITION) == 0) {
-                tokens[tokenCounter].type = TOKEN_DEFINITION;
-                tokens[tokenCounter].value = splittedToken;
+                assingToken(TOKEN_DEFINITION, VALUE_DEFINITION);
             } else {
-                tokens[tokenCounter].type = TOKEN_IDENTIFIER;
-                tokens[tokenCounter].value = splittedToken;
+                assingToken(TOKEN_IDENTIFIER, splittedToken);
             }
             tokenCounter++;
         } else if (isdigit(*source)) {
             char *splittedToken = digitTokenization(&source);
-            tokens[tokenCounter].type = TOKEN_DIGIT;
-            tokens[tokenCounter].value = splittedToken;
+            assingToken(TOKEN_DIGIT, splittedToken);
             tokenCounter++;
         } else if (*source == VALUE_ASSIGNMENT) {
-            tokens[tokenCounter].type = TOKEN_ASSIGNMENT;
-            tokens[tokenCounter].value = VALUE_ASSIGNMENT_STRING;
+            assingToken(TOKEN_ASSIGNMENT, VALUE_ASSIGNMENT_STRING);
             tokenCounter++;
             source++;
         }else if(*source == VALUE_PUNCTUATION){
-            tokens[tokenCounter].type = TOKEN_PUNCTUATION;
-            tokens[tokenCounter].value = VALUE_PUNCTUATION_STRING;
+            assingToken(TOKEN_PUNCTUATION, VALUE_PUNCTUATION_STRING);
             tokenCounter++;
             source++;
         }else {

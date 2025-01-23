@@ -26,7 +26,7 @@ char *tokenization(const char **raw) {
 char *digitTokenization(const char **raw) {
     char buffer[100];
     int i = 0;
-    while (isdigit(**raw)) {
+    while (isdigit(**raw) || **raw == '.') {
         buffer[i++] = **raw;
         (*raw)++;
     }

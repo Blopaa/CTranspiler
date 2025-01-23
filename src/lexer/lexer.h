@@ -5,7 +5,7 @@
 #ifndef LEXER_H
 #define LEXER_H
 
-#define VALUE_DEFINITION "let"
+#define VALUE_DEFINITION "def"
 #define VALUE_ASSIGNMENT '!'
 #define VALUE_ASSIGNMENT_STRING "!"
 #define VALUE_PUNCTUATION ';'

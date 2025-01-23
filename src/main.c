@@ -1,10 +1,46 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "lexer/lexer.h"
 #include "parser/parser.h"
+#include "generator/generator.h"
 
 int main(void) {
-    const char *input = "let b = 13;let a = 12;";
-    int i = 0;
+    FILE *outputFile;
+    FILE *inputFile;
+
+    outputFile = fopen("src/output.c", "w");
+    inputFile = fopen("src/input.zk", "r");
+
+    fseek(inputFile, 0, SEEK_END);
+    long fileSize = ftell(inputFile);
+    rewind(inputFile);
+
+    char *inputText = malloc(fileSize + 1);
+    if (inputText == NULL) {
+        perror("Error al reservar memoria");
+        fclose(inputFile);
+        return 1;
+    }
+
+    fread(inputText, 1, fileSize, inputFile);
+    inputText[fileSize-1] = '\0';
+
+    if(outputFile != NULL) {
+        Token *tokens = lexer(inputText);
+        Node *nodes = ASTGenerator(tokens);
+        generateCode(nodes, outputFile);
+    }
+    fclose( outputFile);
+
+    return 0;
+
+}
+
+
+
+
+/**
+*  int i = 0;
     Token *tokens = lexer(input);
     while(tokens[i].type != TOKEN_EOF) {
         printf("Token type: %d, Value: %s\n", tokens[i].type, tokens[i].value);
@@ -20,5 +56,4 @@ int main(void) {
         u++;
     }
 
-    return 0;
-}
+ */

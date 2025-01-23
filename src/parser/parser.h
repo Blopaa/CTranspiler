@@ -7,15 +7,20 @@
 #include "../lexer/lexer.h"
 
 typedef enum {
+    NUMBER_TYPE,
+    STRING_TYPE
+} TypeValue;
+
+typedef enum {
     PROGRAM,
     LITERAL,
-    STRING,
     ASSIGNMENT,
     NODE_EOF
 } NodeType;
 
 struct Node{
     NodeType type;
+    TypeValue typeValue;
     char *name;
     char *value;
     struct Node *children[10];

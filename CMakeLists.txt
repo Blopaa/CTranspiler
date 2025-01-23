@@ -8,4 +8,6 @@ add_executable(untitled14 src/main.c
         src/lexer/lexer.c
         src/parser/parser.h
         src/parser/parser.c
+        src/generator/generator.c
+        src/generator/generator.h
 )

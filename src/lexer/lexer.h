@@ -17,6 +17,7 @@ typedef enum {
     TOKEN_DEFINITION,
     TOKEN_ASSIGNMENT,
     TOKEN_DIGIT,
+    TOKEN_STRING,
     TOKEN_EOF,
 } TokenType;
 

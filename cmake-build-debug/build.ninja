@@ -61,6 +61,18 @@ build CMakeFiles/untitled14.dir/src/lexer/lexer.c.obj: C_COMPILER__untitled14_un
   OBJECT_DIR = CMakeFiles\untitled14.dir
   OBJECT_FILE_DIR = CMakeFiles\untitled14.dir\src\lexer
 
+build CMakeFiles/untitled14.dir/src/parser/parser.c.obj: C_COMPILER__untitled14_unscanned_Debug C$:/Users/pablo/CLionProjects/untitled14/src/parser/parser.c || cmake_object_order_depends_target_untitled14
+  DEP_FILE = CMakeFiles\untitled14.dir\src\parser\parser.c.obj.d
+  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\untitled14.dir
+  OBJECT_FILE_DIR = CMakeFiles\untitled14.dir\src\parser
+
+build CMakeFiles/untitled14.dir/src/generator/generator.c.obj: C_COMPILER__untitled14_unscanned_Debug C$:/Users/pablo/CLionProjects/untitled14/src/generator/generator.c || cmake_object_order_depends_target_untitled14
+  DEP_FILE = CMakeFiles\untitled14.dir\src\generator\generator.c.obj.d
+  FLAGS = -g -std=gnu11 -fdiagnostics-color=always
+  OBJECT_DIR = CMakeFiles\untitled14.dir
+  OBJECT_FILE_DIR = CMakeFiles\untitled14.dir\src\generator
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target untitled14
@@ -69,7 +81,7 @@ build CMakeFiles/untitled14.dir/src/lexer/lexer.c.obj: C_COMPILER__untitled14_un
 #############################################
 # Link the executable untitled14.exe
 
-build untitled14.exe: C_EXECUTABLE_LINKER__untitled14_Debug CMakeFiles/untitled14.dir/src/main.c.obj CMakeFiles/untitled14.dir/src/lexer/lexer.c.obj
+build untitled14.exe: C_EXECUTABLE_LINKER__untitled14_Debug CMakeFiles/untitled14.dir/src/main.c.obj CMakeFiles/untitled14.dir/src/lexer/lexer.c.obj CMakeFiles/untitled14.dir/src/parser/parser.c.obj CMakeFiles/untitled14.dir/src/generator/generator.c.obj
   FLAGS = -g
   LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\untitled14.dir

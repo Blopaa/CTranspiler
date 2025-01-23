@@ -20,17 +20,22 @@ Node *CreateFatherNode() {
 Node *GenerateEOFNode() {
     Node *node = calloc(1, sizeof(Node));
     node->type = NODE_EOF;
+    node->name = "EOF";
     return node;
 }
 
 Node *GenerateVariableNode(const Token *tokens) {
     Node *node = calloc(1, sizeof(Node));
-    node->type = LITERAL;
+    node->type = ASSIGNMENT;
     while(tokens[currentToken].type != TOKEN_PUNCTUATION) {
         if(tokens[currentToken].type == TOKEN_IDENTIFIER) {
             node->name = tokens[currentToken].value;
         }else if(tokens[currentToken].type == TOKEN_DIGIT) {
             node->value = tokens[currentToken].value;
+            node->typeValue = NUMBER_TYPE;
+        }else if(tokens[currentToken].type == TOKEN_STRING) {
+            node->value = tokens[currentToken].value;
+            node->typeValue = STRING_TYPE;
         }
         currentToken++;
     }
@@ -38,7 +43,6 @@ Node *GenerateVariableNode(const Token *tokens) {
 }
 
 Node *ASTGenerator(const Token *tokens) {
-    Node **children = calloc(100, sizeof(Node));
     int childrenCounter = 0;
     Node *programNode = CreateFatherNode();
     while (tokens[currentToken].type != TOKEN_EOF) {

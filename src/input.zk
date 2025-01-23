@@ -1,2 +1,3 @@
-let variablaA = "hola mundo";
-let variableB = 12;
+let variableA ! "hola mundo";
+let variableB ! 12343;
+let variableC ! "blah blah blah";

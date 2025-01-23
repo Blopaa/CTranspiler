@@ -6,8 +6,8 @@
 #define LEXER_H
 
 #define VALUE_DEFINITION "let"
-#define VALUE_ASSIGNMENT '='
-#define VALUE_ASSIGNMENT_STRING "="
+#define VALUE_ASSIGNMENT '!'
+#define VALUE_ASSIGNMENT_STRING "!"
 #define VALUE_PUNCTUATION ';'
 #define VALUE_PUNCTUATION_STRING ";"
 

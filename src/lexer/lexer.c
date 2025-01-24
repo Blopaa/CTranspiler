@@ -50,6 +50,7 @@ char *stringTokenization(const char **raw) {
 void assingToken(TokenType type, const char *value) {
     tokens[tokenCounter].type = type;
     tokens[tokenCounter].value = value;
+    printf("type: %d, value: %s\n", tokens[tokenCounter].type, tokens[tokenCounter].value);
 }
 
 Token *lexer(const char *source) {
@@ -76,7 +77,11 @@ Token *lexer(const char *source) {
             char *splittedToken = digitTokenization(&source);
             assingToken(TOKEN_DIGIT, splittedToken);
             tokenCounter++;
-        } else if (*source == VALUE_ASSIGNMENT) {
+        } else if(*source == '+') {
+            assingToken(TOKEN_OPERATOR, "+");
+            tokenCounter++;
+            source++;
+        }else if (*source == VALUE_ASSIGNMENT) {
             assingToken(TOKEN_ASSIGNMENT, VALUE_ASSIGNMENT_STRING);
             tokenCounter++;
             source++;
@@ -88,7 +93,6 @@ Token *lexer(const char *source) {
             source++;
         }
     }
-
     tokens[tokenCounter].type = TOKEN_EOF;
     return tokens;
 }

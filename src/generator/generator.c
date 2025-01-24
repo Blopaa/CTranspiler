@@ -24,7 +24,13 @@ void generateCode(Node *node, FILE *output) {
                 fprintf(output, "\t%s %s = %s;\n",type, node->name, node->value);
             }else if(node->typeValue == STRING_TYPE) {
                 fprintf(output, "\tchar *%s = \"%s\";\n", node->name, node->value);
+            }else if (node->typeValue == OPERATOR_TYPE) {
+                fprintf(output, "\tint %s = ", node->name);
+                generateCode(node->children[0], output);
             }
+            break;
+        case OPERATOR:
+            fprintf(output, "%s %s %s;\n", node->children[0]->name, node->name, node->children[1]->name);
             break;
     }
 }

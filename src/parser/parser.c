@@ -4,7 +4,9 @@
 
 #include "parser.h"
 
+#include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "../lexer/lexer.h"
 
@@ -24,35 +26,74 @@ Node *GenerateEOFNode() {
     return node;
 }
 
-Node *GenerateVariableNode(const Token *tokens) {
+
+Node *generateOperatorNode(const Token *tokens, Node *children[10]) {
+    int i = 0;
+    int u = 0;
+    Node *node = calloc(1, sizeof(Node));
+    node->type = OPERATOR;
+    node->name = tokens[currentToken + 1].value;
+    while (tokens[currentToken].type != TOKEN_PUNCTUATION) {
+        char *tok = tokens[currentToken].value;
+        char *name = children[i]->name;
+        if (strcmp(tok, name) == 0) {
+            node->children[u] = children[i];
+            u++;
+            currentToken++;
+            i = 0;
+        }
+        if (children[i + 1]->type == NODE_EOF) {
+            currentToken++;
+            i = 0;
+        } else {
+            i++;
+        }
+    }
+    return node;
+}
+
+Node *GenerateVariableNode(const Token *tokens, Node *children[10]) {
     Node *node = calloc(1, sizeof(Node));
     node->type = ASSIGNMENT;
-    while(tokens[currentToken].type != TOKEN_PUNCTUATION) {
-        if(tokens[currentToken].type == TOKEN_IDENTIFIER) {
+    while (tokens[currentToken].type != TOKEN_PUNCTUATION && tokens[currentToken].type != TOKEN_EOF) {
+        if (tokens[currentToken].type == TOKEN_IDENTIFIER) {
             node->name = tokens[currentToken].value;
-        }else if(tokens[currentToken].type == TOKEN_DIGIT) {
+        } else if (tokens[currentToken].type == TOKEN_DIGIT) {
             node->value = tokens[currentToken].value;
             node->typeValue = NUMBER_TYPE;
-        }else if(tokens[currentToken].type == TOKEN_STRING) {
+        } else if (tokens[currentToken].type == TOKEN_STRING) {
             node->value = tokens[currentToken].value;
             node->typeValue = STRING_TYPE;
+        } else if (tokens[currentToken].type == TOKEN_ASSIGNMENT && tokens[currentToken + 1].type == TOKEN_IDENTIFIER) {
+            node->typeValue = OPERATOR_TYPE;
+            currentToken++;
+            node->children[0] = generateOperatorNode(tokens, children);
+            currentToken--;
         }
         currentToken++;
     }
     return node;
 }
 
+
 Node *ASTGenerator(const Token *tokens) {
     int childrenCounter = 0;
     Node *programNode = CreateFatherNode();
     while (tokens[currentToken].type != TOKEN_EOF) {
-        if(tokens[currentToken].type == TOKEN_DEFINITION) {
-            programNode->children[childrenCounter] = GenerateVariableNode(tokens);
+        if (tokens[currentToken].type == TOKEN_DEFINITION) {
+            programNode->children[childrenCounter] = GenerateVariableNode(tokens, programNode->children);
+            currentToken++;
+            childrenCounter++;
+            programNode->children[childrenCounter] = GenerateEOFNode();
+        } else if (tokens[currentToken].type == TOKEN_IDENTIFIER) {
+            programNode->children[childrenCounter] = generateOperatorNode(tokens, programNode->children);
+            currentToken++;
+            childrenCounter++;
+            programNode->children[childrenCounter] = GenerateEOFNode();
+        }else if(tokens[currentToken].type == TOKEN_PUNCTUATION) {
+            currentToken++;
         }
-        currentToken++;
-        childrenCounter++;
     }
-    programNode->children[childrenCounter]= GenerateEOFNode();
 
     return programNode;
 }

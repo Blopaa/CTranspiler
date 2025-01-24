@@ -8,10 +8,12 @@
 
 typedef enum {
     NUMBER_TYPE,
-    STRING_TYPE
+    STRING_TYPE,
+    OPERATOR_TYPE
 } TypeValue;
 
 typedef enum {
+    OPERATOR,
     PROGRAM,
     LITERAL,
     ASSIGNMENT,

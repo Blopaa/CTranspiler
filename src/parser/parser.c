@@ -49,10 +49,14 @@ Node *generateOperatorNode(const Token *tokens, Node *children[10]) {
             i++;
         }
     }
-    if(node->children[0]->typeValue == DOUBLE_TYPE || node->children[1]->typeValue == DOUBLE_TYPE) {
-        node->typeValue = DOUBLE_TYPE;
+    if (node->children[0]->typeValue == STRING_TYPE || node->children[1]->typeValue == STRING_TYPE) {
+        node->typeValue = STRING_TYPE;
     } else {
-        node->typeValue = INT_TYPE;
+        if (node->children[0]->typeValue == DOUBLE_TYPE || node->children[1]->typeValue == DOUBLE_TYPE) {
+            node->typeValue = DOUBLE_TYPE;
+        } else {
+            node->typeValue = INT_TYPE;
+        }
     }
     return node;
 }
@@ -76,8 +80,10 @@ Node *GenerateVariableNode(const Token *tokens, Node *children[10]) {
         } else if (tokens[currentToken].type == TOKEN_ASSIGNMENT && tokens[currentToken + 1].type == TOKEN_IDENTIFIER) {
             currentToken++;
             node->children[0] = generateOperatorNode(tokens, children);
-            if(node->children[0]->typeValue == DOUBLE_TYPE) {
+            if (node->children[0]->typeValue == DOUBLE_TYPE) {
                 node->typeValue = OPERATOR_DOUBLE_TYPE;
+            } else if (node->children[0]->typeValue == STRING_TYPE) {
+                node->typeValue = OPERATOR_STRING_TYPE;
             } else {
                 node->typeValue = OPERATOR_INT_TYPE;
             }

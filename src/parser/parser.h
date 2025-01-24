@@ -12,6 +12,7 @@ typedef enum {
     STRING_TYPE,
     OPERATOR_INT_TYPE,
     OPERATOR_DOUBLE_TYPE,
+    OPERATOR_STRING_TYPE
 } TypeValue;
 
 typedef enum {

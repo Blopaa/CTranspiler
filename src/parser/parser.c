@@ -179,11 +179,11 @@ Node *returnNodeGenerator(Token *tokens, Node *children[100]) {
     int i = 0;
     while (children[i]->type != NODE_EOF) {
         if (strcmp(children[i]->name, node->value) == 0) {
-            if(children[i]->typeValue == DOUBLE_TYPE) {
+            if(children[i]->typeValue == DOUBLE_TYPE || children[i]->typeValue == OPERATOR_DOUBLE_TYPE) {
                 node->typeValue = DOUBLE_TYPE;
-            } else if(children[i]->typeValue == STRING_TYPE) {
+            } else if(children[i]->typeValue == STRING_TYPE || children[i]->typeValue == OPERATOR_STRING_TYPE) {
                 node->typeValue = STRING_TYPE;
-            } else if(children[i]->typeValue == INT_TYPE) {
+            } else if(children[i]->typeValue == INT_TYPE || children[i]->typeValue == OPERATOR_INT_TYPE) {
                 node->typeValue = INT_TYPE;
             }else {
                 node->typeValue = NULL_TYPE;

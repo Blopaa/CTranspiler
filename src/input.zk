@@ -1,6 +1,10 @@
 func miFuncion(a, b){
-    def c ! 1.35;
-    ret c;
+    def c ! 135;
+    def d ! 1.4;
+    def e ! c + d;
+    def f ! "prueba";
+    def g ! f + e;
+    ret g;
 };
 
 def A ! "esto esta funcionando muy bien";

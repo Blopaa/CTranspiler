@@ -1,4 +1,4 @@
 def variableA ! "hola mundo";
-def entero ! 1;
-def decimal ! 1.25;
+def entero ! 1.2;
+def decimal ! 143;
 def suma ! entero + decimal;

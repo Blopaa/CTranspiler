@@ -19,13 +19,14 @@ void generateCode(Node *node, FILE *output) {
             fprintf(output, "\n\treturn 0;\n}\n");
             break;
         case ASSIGNMENT:
-            if(node->typeValue == NUMBER_TYPE) {
-                char *type = strchr(node->value, '.') == NULL ? "int" : "double";
+            if(node->typeValue == INT_TYPE || node->typeValue == DOUBLE_TYPE) {
+                char *type = node->typeValue == INT_TYPE ? "int" : "double";
                 fprintf(output, "\t%s %s = %s;\n",type, node->name, node->value);
             }else if(node->typeValue == STRING_TYPE) {
                 fprintf(output, "\tchar *%s = \"%s\";\n", node->name, node->value);
-            }else if (node->typeValue == OPERATOR_TYPE) {
-                fprintf(output, "\tint %s = ", node->name);
+            }else if (node->typeValue == OPERATOR_INT_TYPE || node->typeValue == OPERATOR_DOUBLE_TYPE) {
+                char *type = node->typeValue == OPERATOR_INT_TYPE ? "int" : "double";
+                fprintf(output, "\t%s %s = ",type, node->name);
                 generateCode(node->children[0], output);
             }
             break;

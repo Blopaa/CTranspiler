@@ -7,9 +7,11 @@
 #include "../lexer/lexer.h"
 
 typedef enum {
-    NUMBER_TYPE,
+    INT_TYPE,
+    DOUBLE_TYPE,
     STRING_TYPE,
-    OPERATOR_TYPE
+    OPERATOR_INT_TYPE,
+    OPERATOR_DOUBLE_TYPE,
 } TypeValue;
 
 typedef enum {

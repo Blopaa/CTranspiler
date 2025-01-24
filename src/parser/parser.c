@@ -49,6 +49,11 @@ Node *generateOperatorNode(const Token *tokens, Node *children[10]) {
             i++;
         }
     }
+    if(node->children[0]->typeValue == DOUBLE_TYPE || node->children[1]->typeValue == DOUBLE_TYPE) {
+        node->typeValue = DOUBLE_TYPE;
+    } else {
+        node->typeValue = INT_TYPE;
+    }
     return node;
 }
 
@@ -60,14 +65,22 @@ Node *GenerateVariableNode(const Token *tokens, Node *children[10]) {
             node->name = tokens[currentToken].value;
         } else if (tokens[currentToken].type == TOKEN_DIGIT) {
             node->value = tokens[currentToken].value;
-            node->typeValue = NUMBER_TYPE;
+            if (strchr(node->value, '.') == NULL) {
+                node->typeValue = INT_TYPE;
+            } else {
+                node->typeValue = DOUBLE_TYPE;
+            }
         } else if (tokens[currentToken].type == TOKEN_STRING) {
             node->value = tokens[currentToken].value;
             node->typeValue = STRING_TYPE;
         } else if (tokens[currentToken].type == TOKEN_ASSIGNMENT && tokens[currentToken + 1].type == TOKEN_IDENTIFIER) {
-            node->typeValue = OPERATOR_TYPE;
             currentToken++;
             node->children[0] = generateOperatorNode(tokens, children);
+            if(node->children[0]->typeValue == DOUBLE_TYPE) {
+                node->typeValue = OPERATOR_DOUBLE_TYPE;
+            } else {
+                node->typeValue = OPERATOR_INT_TYPE;
+            }
             currentToken--;
         }
         currentToken++;
@@ -90,7 +103,7 @@ Node *ASTGenerator(const Token *tokens) {
             currentToken++;
             childrenCounter++;
             programNode->children[childrenCounter] = GenerateEOFNode();
-        }else if(tokens[currentToken].type == TOKEN_PUNCTUATION) {
+        } else if (tokens[currentToken].type == TOKEN_PUNCTUATION) {
             currentToken++;
         }
     }

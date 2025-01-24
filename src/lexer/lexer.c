@@ -77,8 +77,9 @@ Token *lexer(const char *source) {
             char *splittedToken = digitTokenization(&source);
             assingToken(TOKEN_DIGIT, splittedToken);
             tokenCounter++;
-        } else if(*source == '+') {
-            assingToken(TOKEN_OPERATOR, "+");
+        } else if(*source == '+' || *source == '-' || *source == '*' || *source == '/') {
+            char operator[2] = {source[0], '\0'};
+            assingToken(TOKEN_OPERATOR, strdup(operator));
             tokenCounter++;
             source++;
         }else if (*source == VALUE_ASSIGNMENT) {

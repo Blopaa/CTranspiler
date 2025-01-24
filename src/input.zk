@@ -1,7 +1,6 @@
-def variableA ! 1;
-def variableB ! 2.5;
-def variableC ! " hola mundo";
-def suma ! variableA + variableB;
-def sumaTexto ! suma + variableC;
+func miFuncion(a, b){
+    def c ! 1.35;
+    ret c;
+};
 
-print(sumaTexto);
+def A ! "esto esta funcionando muy bien";

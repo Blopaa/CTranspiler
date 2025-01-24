@@ -29,8 +29,8 @@ int main(void) {
 
     if(outputFile != NULL) {
         Token *tokens = lexer(inputText);
-        Node *nodes = ASTGenerator(tokens);
-        generateCode(nodes, outputFile);
+        Node *nodes = ASTProgramGenerator(tokens);
+        generateCode(nodes, outputFile, 1);
     }
     fclose( outputFile);
 

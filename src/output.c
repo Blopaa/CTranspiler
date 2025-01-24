@@ -1,15 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+double miFuncion(a,b){
+	double c = 1.35;
+	return c;
+}
+
 int main(void){
-	int variableA = 1;
-	double variableB = 2.5;
-	char *variableC = " hola mundo";
-	double suma = variableA + variableB;
-	int size0 = snprintf(NULL, 0, "%f%s", suma, variableC) + 1;
-	char *sumaTexto = malloc(size0);
-	sprintf(sumaTexto,"%f%s", suma, variableC);
-	printf("%s", sumaTexto);
+	char *A = "esto esta funcionando muy bien";
 
 	return 0;
 }

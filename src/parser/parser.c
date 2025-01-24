@@ -127,30 +127,122 @@ Node *generatePrintNode(const Token *tokens, Node *children[100]) {
     return node;
 }
 
+Node *generateParameterNode(const Token *tokens) {
+    Node *node = calloc(1, sizeof(Node));
+    node->type = PARAMETER;
+    node->name = tokens[currentToken].value;
+    return node;
+}
 
-Node *ASTGenerator(const Token *tokens) {
+Node *functionNodeGenerator(const Token *tokens, Node *children[100]) {
+    int i = 0;
+    int u = 0;
+    Node *node = calloc(1, sizeof(Node));
+    node->type = FUNCTION;
+    currentToken++;
+    node ->name = tokens[currentToken].value;
+    currentToken +=2;
+    while (tokens[currentToken].type != TOKEN_PARENTHESES_CLOSE) {
+        node->children[i] = generateParameterNode(tokens);
+        currentToken++;
+        if(tokens[currentToken].type == TOKEN_COMMA) {
+            currentToken++;
+        }
+        i++;
+    }
+    currentToken += 2;
+    Node **childrenFunction = ASTGenerator(tokens);
+    while((*childrenFunction)->type != NODE_EOF) {
+        if((*childrenFunction)->typeValue == STRING_TYPE) {
+            node->typeValue = STRING_TYPE;
+        } else if((*childrenFunction)->typeValue == INT_TYPE) {
+            node->typeValue = INT_TYPE;
+        } else if((*childrenFunction)->typeValue == DOUBLE_TYPE) {
+            node->typeValue = DOUBLE_TYPE;
+        } else {
+            node->typeValue = NULL_TYPE;
+        }
+        node->children[i] = *childrenFunction;
+        childrenFunction++;
+        i++;
+    }
+    node->children[i] = GenerateEOFNode();
+    return node;
+}
+
+Node *returnNodeGenerator(Token *tokens, Node *children[100]) {
+    Node *node = calloc(1, sizeof(Node));
+    node->type = RETURN;
+    node->name = "return";
+    currentToken++;
+    node->value = tokens[currentToken].value;
+    int i = 0;
+    while (children[i]->type != NODE_EOF) {
+        if (strcmp(children[i]->name, node->value) == 0) {
+            if(children[i]->typeValue == DOUBLE_TYPE) {
+                node->typeValue = DOUBLE_TYPE;
+            } else if(children[i]->typeValue == STRING_TYPE) {
+                node->typeValue = STRING_TYPE;
+            } else if(children[i]->typeValue == INT_TYPE) {
+                node->typeValue = INT_TYPE;
+            }else {
+                node->typeValue = NULL_TYPE;
+            }
+        }
+        i++;
+    }
+    if(node->typeValue == NULL_TYPE) {
+        printf("cannot return variable \"%s\" because it is not defined\n", node->value);
+        exit(1);
+    }
+    return node;
+}
+
+Node **ASTGenerator(const Token *tokens) {
     int childrenCounter = 0;
-    Node *programNode = CreateFatherNode();
-    while (tokens[currentToken].type != TOKEN_EOF) {
+    Node** children = malloc(100 * sizeof(Node));
+    while (tokens[currentToken].type != TOKEN_EOF && tokens[currentToken].type != TOKEN_CURLY_BRACKETS_CLOSE) {
         if (tokens[currentToken].type == TOKEN_DEFINITION) {
-            programNode->children[childrenCounter] = GenerateVariableNode(tokens, programNode->children);
+            children[childrenCounter] = GenerateVariableNode(tokens, children);
             currentToken++;
             childrenCounter++;
-            programNode->children[childrenCounter] = GenerateEOFNode();
+            children[childrenCounter] = GenerateEOFNode();
         } else if (tokens[currentToken].type == TOKEN_IDENTIFIER) {
-            programNode->children[childrenCounter] = generateOperatorNode(tokens, programNode->children);
+            children[childrenCounter] = generateOperatorNode(tokens, children);
             currentToken++;
             childrenCounter++;
-            programNode->children[childrenCounter] = GenerateEOFNode();
+            children[childrenCounter] = GenerateEOFNode();
+        }else if(tokens[currentToken].type == TOKEN_RETURN) {
+            children[childrenCounter] = returnNodeGenerator(tokens, children);
+            currentToken++;
+            childrenCounter++;
+            children[childrenCounter] = GenerateEOFNode();
+        }else if(tokens[currentToken].type == TOKEN_FUNCTION_DEFINITION) {
+            children[childrenCounter] = functionNodeGenerator(tokens, children);
+            currentToken++;
+            childrenCounter++;
+            children[childrenCounter] = GenerateEOFNode();
         } else if (tokens[currentToken].type == TOKEN_PRINT) {
-            programNode->children[childrenCounter] = generatePrintNode(tokens, programNode->children);
+            children[childrenCounter] = generatePrintNode(tokens, children);
             currentToken++;
             childrenCounter++;
-            programNode->children[childrenCounter] = GenerateEOFNode();
+            children[childrenCounter] = GenerateEOFNode();
         } else if (tokens[currentToken].type == TOKEN_PUNCTUATION) {
             currentToken++;
         }
     }
+    return children;
+}
 
+Node *ASTProgramGenerator(const Token *tokens) {
+    int childrenCounter = 0;
+    Node *programNode = CreateFatherNode();
+    Node **children = ASTGenerator(tokens);
+    while((*children)->type != NODE_EOF) {
+        programNode->children[childrenCounter] = *children;
+        children++;
+        childrenCounter++;
+    }
+    programNode->children[childrenCounter] = GenerateEOFNode();
     return programNode;
 }

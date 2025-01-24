@@ -7,6 +7,6 @@
 #include "../parser/parser.h"
 #include <stdio.h>
 
-void generateCode(const Node *node, FILE *output);
+void generateCode(const Node *node, FILE *output, int original);
 
 #endif //GENERATOR_H

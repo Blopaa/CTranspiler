@@ -12,16 +12,20 @@ typedef enum {
     STRING_TYPE,
     OPERATOR_INT_TYPE,
     OPERATOR_DOUBLE_TYPE,
-    OPERATOR_STRING_TYPE
+    OPERATOR_STRING_TYPE,
+    NULL_TYPE
 } TypeValue;
 
 typedef enum {
+    RETURN,
     OPERATOR,
     PRINT,
     PROGRAM,
     LITERAL,
     ASSIGNMENT,
-    NODE_EOF
+    NODE_EOF,
+    PARAMETER,
+    FUNCTION
 } NodeType;
 
 struct Node{
@@ -34,6 +38,7 @@ struct Node{
 
 typedef struct Node Node;
 
-Node *ASTGenerator(const Token *tokens);
+Node *ASTProgramGenerator(const Token *tokens);
+Node **ASTGenerator(const Token *tokens);
 
 #endif //PARSER_H

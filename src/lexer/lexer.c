@@ -65,6 +65,8 @@ Token *lexer(const char *source) {
             char *splittedToken = tokenization(&source);
             if (strcmp(splittedToken,VALUE_DEFINITION) == 0) {
                 assingToken(TOKEN_DEFINITION, VALUE_DEFINITION);
+            }else if(strcmp(splittedToken, VALUE_PRINT) == 0){
+                assingToken(TOKEN_PRINT, VALUE_PRINT);
             } else {
                 assingToken(TOKEN_IDENTIFIER, splittedToken);
             }
@@ -77,7 +79,7 @@ Token *lexer(const char *source) {
             char *splittedToken = digitTokenization(&source);
             assingToken(TOKEN_DIGIT, splittedToken);
             tokenCounter++;
-        } else if(*source == '+' || *source == '-' || *source == '*' || *source == '/') {
+        } else if(*source == '+' || *source == '-' || *source == '*' || *source == '/'){
             char operator[2] = {source[0], '\0'};
             assingToken(TOKEN_OPERATOR, strdup(operator));
             tokenCounter++;
@@ -90,7 +92,13 @@ Token *lexer(const char *source) {
             assingToken(TOKEN_PUNCTUATION, VALUE_PUNCTUATION_STRING);
             tokenCounter++;
             source++;
-        }else {
+        }else if(*source == VALE_PARENTHESES_OPEN){
+            assingToken(TOKEN_PARENTHESES_OPEN, "(");
+            tokenCounter++;
+            source++;
+        }else if(*source == VALE_PARENTHESES_CLOSE){
+            assingToken(TOKEN_PARENTHESES_CLOSE, ")");
+            tokenCounter++;
             source++;
         }
     }

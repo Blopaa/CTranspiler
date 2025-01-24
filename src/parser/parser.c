@@ -27,16 +27,14 @@ Node *GenerateEOFNode() {
 }
 
 
-Node *generateOperatorNode(const Token *tokens, Node *children[10]) {
+Node *generateOperatorNode(const Token *tokens, Node *children[100]) {
     int i = 0;
     int u = 0;
     Node *node = calloc(1, sizeof(Node));
     node->type = OPERATOR;
     node->name = tokens[currentToken + 1].value;
     while (tokens[currentToken].type != TOKEN_PUNCTUATION) {
-        char *tok = tokens[currentToken].value;
-        char *name = children[i]->name;
-        if (strcmp(tok, name) == 0) {
+        if (strcmp(tokens[currentToken].value, children[i]->name) == 0) {
             node->children[u] = children[i];
             u++;
             currentToken++;
@@ -61,7 +59,7 @@ Node *generateOperatorNode(const Token *tokens, Node *children[10]) {
     return node;
 }
 
-Node *GenerateVariableNode(const Token *tokens, Node *children[10]) {
+Node *GenerateVariableNode(const Token *tokens, Node *children[100]) {
     Node *node = calloc(1, sizeof(Node));
     node->type = ASSIGNMENT;
     while (tokens[currentToken].type != TOKEN_PUNCTUATION && tokens[currentToken].type != TOKEN_EOF) {
@@ -94,6 +92,30 @@ Node *GenerateVariableNode(const Token *tokens, Node *children[10]) {
     return node;
 }
 
+Node *generatePrintNode(const Token *tokens, Node *children[100]) {
+    int i = 0;
+    int u = 0;
+    Node *node = calloc(1, sizeof(Node));
+    node->type = PRINT;
+    node->name = tokens[currentToken].value;
+    currentToken += 2;
+    while (tokens[currentToken].type != TOKEN_PUNCTUATION) {
+        if(strcmp(tokens[currentToken].value, children[i]->name) == 0) {
+            node->children[u] = children[i];
+            u++;
+            currentToken++;
+            i = 0;
+        }
+        if (children[i + 1]->type == NODE_EOF) {
+            currentToken++;
+            i = 0;
+        } else {
+            i++;
+        }
+    }
+    return node;
+}
+
 
 Node *ASTGenerator(const Token *tokens) {
     int childrenCounter = 0;
@@ -106,6 +128,11 @@ Node *ASTGenerator(const Token *tokens) {
             programNode->children[childrenCounter] = GenerateEOFNode();
         } else if (tokens[currentToken].type == TOKEN_IDENTIFIER) {
             programNode->children[childrenCounter] = generateOperatorNode(tokens, programNode->children);
+            currentToken++;
+            childrenCounter++;
+            programNode->children[childrenCounter] = GenerateEOFNode();
+        }else if(tokens[currentToken].type == TOKEN_PRINT){
+            programNode->children[childrenCounter] = generatePrintNode(tokens, programNode->children);
             currentToken++;
             childrenCounter++;
             programNode->children[childrenCounter] = GenerateEOFNode();

@@ -17,6 +17,7 @@ typedef enum {
 
 typedef enum {
     OPERATOR,
+    PRINT,
     PROGRAM,
     LITERAL,
     ASSIGNMENT,
@@ -28,7 +29,7 @@ struct Node{
     TypeValue typeValue;
     char *name;
     char *value;
-    struct Node *children[10];
+    struct Node *children[100];
 };
 
 typedef struct Node Node;

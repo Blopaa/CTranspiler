@@ -1,7 +1,10 @@
 def variableA ! "hola mundo";
-def entero ! 1.2;
+def entero ! 1.34;
 def decimal ! 143;
 def suma ! entero + variableA;
 def resta ! entero - decimal;
 def multiplicacion ! entero * decimal;
 def division ! entero / decimal;
+def algo ! division + variableA;
+print(suma);
+print(algo);

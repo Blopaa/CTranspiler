@@ -5,10 +5,9 @@
 #include "generator.h"
 
 #include <string.h>
-
+int tempVars = 0;
 void generateCode(Node *node, FILE *output) {
     int i = 0;
-    int tempVars = 0;
     if (node == NULL) return;
     switch (node->type) {
         case PROGRAM:
@@ -30,9 +29,10 @@ void generateCode(Node *node, FILE *output) {
                 char *type;
                 if (node->typeValue == OPERATOR_STRING_TYPE) {
                     type = "char *";
-                    fprintf(output, "\tint size%d = snprintf(NULL, 0, \"%%f%%s\", entero, variableA) + 1;\n", tempVars);
+                    fprintf(output, "\tint size%d = snprintf(NULL, 0, \"%%f%%s\", %s, %s) + 1;\n", tempVars, node->children[0]->children[0]->name, node->children[0]->children[1]->name);
                     fprintf(output, "\t%s%s = malloc(size%d);\n", type, node->name, tempVars);
                     fprintf(output, "\tsprintf(%s,\"%%f%%s\", %s, %s);\n", node->name, node->children[0]->children[0]->name, node->children[0]->children[1]->name);
+                    tempVars++;
                 }else {
                     if (node->typeValue == OPERATOR_INT_TYPE) {
                         type = "int ";
@@ -46,6 +46,10 @@ void generateCode(Node *node, FILE *output) {
             break;
         case OPERATOR:
             fprintf(output, "%s %s %s;\n", node->children[0]->name, node->name, node->children[1]->name);
+            break;
+        case PRINT:
+            fprintf(output, "\tprintf(\"%%s\", %s);\n", node->children[0]->name);
+
             break;
     }
 }
